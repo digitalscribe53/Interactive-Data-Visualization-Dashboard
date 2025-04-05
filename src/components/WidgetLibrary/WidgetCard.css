@@ -1,0 +1,28 @@
+/* src/components/WidgetLibrary/WidgetCard.css */
+.widget-library-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    height: 100%;
+  }
+  
+  .widget-library-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .widget-card-content {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  
+  .widget-card-icon {
+    margin-right: 16px;
+    color: #3f51b5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .widget-card-info {
+    flex: 1;
+  }

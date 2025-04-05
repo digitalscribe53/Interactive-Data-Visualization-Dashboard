@@ -4,6 +4,7 @@ import {
   Drawer,
   List,
   ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   Divider,
@@ -57,19 +58,19 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
           <Divider />
           <List>
             {dashboards.map((dashboard) => (
-              <ListItem
-                button
-                key={dashboard.id}
-                selected={currentDashboard?.id === dashboard.id}
-                onClick={() => {
-                  switchDashboard(dashboard.id);
-                  onClose();
-                }}
-              >
-                <ListItemIcon>
-                  <DashboardIcon />
-                </ListItemIcon>
-                <ListItemText primary={dashboard.name} />
+              <ListItem key={dashboard.id} disablePadding>
+                <ListItemButton
+                  selected={currentDashboard?.id === dashboard.id}
+                  onClick={() => {
+                    switchDashboard(dashboard.id);
+                    onClose();
+                  }}
+                >
+                  <ListItemIcon>
+                    <DashboardIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={dashboard.name} />
+                </ListItemButton>
               </ListItem>
             ))}
           </List>
