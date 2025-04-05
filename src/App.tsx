@@ -1,35 +1,59 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// src/App.tsx
+import React, { useState } from 'react';
+import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+import { DashboardProvider } from './context/DashboardContext';
+import Dashboard from './components/Dashboard/Dashboard';
+import Header from './components/Layout/Header';
+import Sidebar from './components/Layout/Sidebar';
+import WidgetLibrary from './components/WidgetLibrary/WidgetLibrary';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#3f51b5',
+    },
+    secondary: {
+      main: '#f50057',
+    },
+  },
+});
+
+const App: React.FC = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [widgetLibraryOpen, setWidgetLibraryOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
+  const toggleWidgetLibrary = () => {
+    setWidgetLibraryOpen(!widgetLibraryOpen);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <DashboardProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <div className="app">
+          <Header 
+            onMenuClick={toggleSidebar} 
+            onAddWidgetClick={toggleWidgetLibrary} 
+          />
+          <div className="app-content">
+            <Sidebar open={sidebarOpen} onClose={toggleSidebar} />
+            <main className="main-content">
+              <Dashboard />
+            </main>
+          </div>
+          <WidgetLibrary 
+            open={widgetLibraryOpen} 
+            onClose={() => setWidgetLibraryOpen(false)} 
+          />
+        </div>
+      </ThemeProvider>
+    </DashboardProvider>
+  );
+};
 
-export default App
+export default App;
