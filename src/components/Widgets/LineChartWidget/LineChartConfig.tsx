@@ -15,6 +15,7 @@ import { LineChartWidget as LineChartWidgetType } from '../../../types/widget.ty
 import { useDashboard } from '../../../context/DashboardContext';
 import DataSourceManager from '../../DataSources/DataSourceManager';
 import { useDataSources } from '../../../hooks/useDataSources';
+import '../widget-form.css';
 
 interface LineChartConfigProps {
   widget: LineChartWidgetType;

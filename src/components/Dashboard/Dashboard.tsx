@@ -1,4 +1,3 @@
-// src/components/Dashboard/Dashboard.tsx
 import React, { useState } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
@@ -10,14 +9,31 @@ import KpiWidget from '../Widgets/KpiWidget/KpiWidget';
 import TableWidget from '../Widgets/TableWidget/TableWidget';
 import { Widget, WidgetPosition } from '../../types/widget.types';
 import './Dashboard.css';
+import './Dashboard.enhanced.css';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
+
+// Define layout item interface
+interface LayoutItem {
+  i: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  minW?: number;
+  minH?: number;
+  maxW?: number;
+  maxH?: number;
+  static?: boolean;
+  isDraggable?: boolean;
+  isResizable?: boolean;
+}
 
 const Dashboard: React.FC = () => {
   const { widgets, updateWidgetPosition, removeWidget } = useDashboard();
   const [editMode, setEditMode] = useState(false);
 
-  const handleLayoutChange = (layout: any[]) => {
+  const handleLayoutChange = (layout: LayoutItem[]) => {
     // Update positions when layout changes
     layout.forEach((item) => {
       const widgetId = item.i;

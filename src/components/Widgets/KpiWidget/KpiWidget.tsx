@@ -1,4 +1,3 @@
-// src/components/Widgets/KpiWidget/KpiWidget.tsx
 import React, { useState } from 'react';
 import { 
   Card, 
@@ -14,6 +13,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { KpiWidget as KpiWidgetType } from '../../../types/widget.types';
 import { useMockData } from '../../../hooks/useWidgetData';
 import KpiConfig from './KpiConfig';
+import '../widget.enhanced.css';
 
 interface KpiWidgetProps {
   widget: KpiWidgetType;
@@ -25,8 +25,12 @@ const KpiWidget: React.FC<KpiWidgetProps> = ({ widget, onRemove }) => {
   const [showConfig, setShowConfig] = useState(false);
   const data = useMockData(widget.config.dataSource);
   
-  // Get the value from the first item in the data array
-  const kpiValue = data.length > 0 ? data[0][widget.config.metricKey] : 0;
+  // Get the value from the first item in the data array with type safety
+  const kpiValue = data.length > 0 
+    ? (typeof data[0][widget.config.metricKey] === 'number' 
+        ? data[0][widget.config.metricKey] as number 
+        : 0)
+    : 0;
   
   // Format the value based on widget configuration
   const formatValue = (value: number): string => {
@@ -107,12 +111,21 @@ const KpiWidget: React.FC<KpiWidgetProps> = ({ widget, onRemove }) => {
             justifyContent="center"
             height="100%"
           >
-            <Typography variant="h3" component="div" color={getStatusColor(percentOfTarget)}>
+            <Typography 
+              variant="h3" 
+              component="div" 
+              color={getStatusColor(percentOfTarget)}
+              className="kpi-value"
+            >
               {widget.config.prefix || ''}{formatValue(kpiValue)}{widget.config.suffix || ''}
             </Typography>
             
             {widget.config.targetValue && (
-              <Typography variant="body2" color="textSecondary">
+              <Typography 
+                variant="body2" 
+                color="textSecondary"
+                className="kpi-target"
+              >
                 {percentOfTarget !== null 
                   ? `${Math.round(percentOfTarget)}% of target` 
                   : ''}

@@ -14,6 +14,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { LineChartWidget as LineChartWidgetType } from '../../../types/widget.types';
 import { useMockData } from '../../../hooks/useWidgetData';
 import LineChartConfig from './LineChartConfig';
+import '../widget.enhanced.css';
 
 interface LineChartWidgetProps {
   widget: LineChartWidgetType;

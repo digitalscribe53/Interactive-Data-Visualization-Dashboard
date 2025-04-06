@@ -20,6 +20,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { TableWidget as TableWidgetType } from '../../../types/widget.types';
 import { useMockData } from '../../../hooks/useWidgetData';
 import TableConfig from './TableConfig';
+import '../widget.enhanced.css';
 
 interface TableWidgetProps {
   widget: TableWidgetType;

@@ -13,6 +13,7 @@ import { IconButton, Card, CardHeader, CardContent, Menu, MenuItem } from '@mui/
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { BarChartWidget as BarChartWidgetType } from '../../../types/widget.types';
 import './BarChartWidget.css';
+import '../widget.enhanced.css';
 import { useMockData } from '../../../hooks/useWidgetData';
 import BarChartConfig from './BarChartConfig';
 

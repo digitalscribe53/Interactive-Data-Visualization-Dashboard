@@ -1,0 +1,54 @@
+/* src/components/Widgets/widget-form.css */
+
+/* Ensure all form labels have the same appearance */
+.widget-config .MuiFormControl-root {
+    margin-bottom: 16px;
+  }
+  
+  .widget-config .MuiInputLabel-root {
+    background-color: white;
+    padding: 0 4px;
+    margin-left: -4px;
+  }
+  
+  .widget-config .MuiOutlinedInput-root {
+    border-radius: 8px;
+  }
+  
+  .widget-config .MuiOutlinedInput-notchedOutline {
+    border-width: 1px;
+  }
+  
+  .widget-config .MuiSelect-select {
+    padding: 12px 14px;
+  }
+  
+  /* Add some improved styling to the configuration panel */
+  .widget-config {
+    padding: 16px;
+    height: 100%;
+    overflow-y: auto;
+  }
+  
+  .widget-config h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #3f51b5;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 10px;
+  }
+  
+  .config-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+  }
+  
+  /* Style for the color picker input */
+  .widget-config input[type="color"] {
+    height: 40px;
+    padding: 4px;
+    cursor: pointer;
+  }

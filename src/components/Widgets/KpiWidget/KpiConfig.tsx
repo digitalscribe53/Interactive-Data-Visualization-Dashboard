@@ -13,6 +13,7 @@ import { KpiWidget as KpiWidgetType } from '../../../types/widget.types';
 import { useDashboard } from '../../../context/DashboardContext';
 import DataSourceManager from '../../DataSources/DataSourceManager';
 import { useDataSources } from '../../../hooks/useDataSources';
+import '../widget-form.css';
 
 interface KpiConfigProps {
   widget: KpiWidgetType;
