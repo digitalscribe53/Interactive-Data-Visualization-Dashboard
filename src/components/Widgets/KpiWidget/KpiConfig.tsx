@@ -11,6 +11,8 @@ import {
 } from '@mui/material';
 import { KpiWidget as KpiWidgetType } from '../../../types/widget.types';
 import { useDashboard } from '../../../context/DashboardContext';
+import DataSourceManager from '../../DataSources/DataSourceManager';
+import { useDataSources } from '../../../hooks/useDataSources';
 
 interface KpiConfigProps {
   widget: KpiWidgetType;
@@ -26,29 +28,41 @@ const KpiConfig: React.FC<KpiConfigProps> = ({ widget, onSave }) => {
   const [targetValue, setTargetValue] = useState(widget.config.targetValue || 0);
   const [prefix, setPrefix] = useState(widget.config.prefix || '');
   const [suffix, setSuffix] = useState(widget.config.suffix || '');
+  const [dataSourceManagerOpen, setDataSourceManagerOpen] = useState(false);
 
-  // Mock data sources for demo
+  // Data sources options
   const dataSources = [
     { id: 'sales', name: 'Sales Data' },
     { id: 'traffic', name: 'Website Traffic' },
     { id: 'performance', name: 'Performance Metrics' },
+    { id: 'browse', name: 'Browse for data source...' }
   ];
 
-  // Mock field options based on the selected data source
-  const getFieldOptions = (dataSourceId: string) => {
-    switch (dataSourceId) {
-      case 'sales':
-        return ['revenue', 'profit', 'units'];
-      case 'traffic':
-        return ['visitors', 'pageviews', 'bounceRate'];
-      case 'performance':
-        return ['value', 'target', 'variance'];
-      default:
-        return [];
+  // Get field options for the selected data source
+  const { getFieldsForDataSource } = useDataSources();
+  
+  // Get available fields for the selected data source
+  const dataSourceFields = getFieldsForDataSource(dataSource);
+  // Filter to only include numeric fields for KPIs
+  const fieldOptions = dataSourceFields
+    .filter(field => field.type === 'number')
+    .map(field => field.name);
+
+  const handleDataSourceChange = (selectedDataSource: string) => {
+    if (selectedDataSource === 'browse') {
+      setDataSourceManagerOpen(true);
+    } else {
+      setDataSource(selectedDataSource);
+      // Reset metric field when data source changes
+      setMetricKey('');
     }
   };
 
-  const fieldOptions = getFieldOptions(dataSource);
+  const handleSelectDataSource = (sourceId: string) => {
+    setDataSource(sourceId);
+    // Reset metric field when data source changes
+    setMetricKey('');
+  };
 
   const handleSave = () => {
     const updatedWidget: KpiWidgetType = {
@@ -85,7 +99,7 @@ const KpiConfig: React.FC<KpiConfigProps> = ({ widget, onSave }) => {
           <InputLabel>Data Source</InputLabel>
           <Select
             value={dataSource}
-            onChange={(e) => setDataSource(e.target.value)}
+            onChange={(e) => handleDataSourceChange(e.target.value)}
           >
             {dataSources.map((ds) => (
               <MenuItem key={ds.id} value={ds.id}>
@@ -155,6 +169,12 @@ const KpiConfig: React.FC<KpiConfigProps> = ({ widget, onSave }) => {
           </Button>
         </div>
       </FormGroup>
+
+      <DataSourceManager
+        open={dataSourceManagerOpen}
+        onClose={() => setDataSourceManagerOpen(false)}
+        onSelectDataSource={handleSelectDataSource}
+      />
     </div>
   );
 };

@@ -1,5 +1,6 @@
 // src/hooks/useWidgetData.ts
 import { useState, useEffect } from 'react';
+import { useDataSources } from './useDataSources';
 
 // Mock data
 const mockData = {
@@ -31,62 +32,25 @@ const mockData = {
   ],
 };
 
-export const useMockData = (dataSourceId: string) => {
-  const [data, setData] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export const useMockData = (dataSourceId: string): Record<string, unknown>[] => {
+  const { getDataSourceById } = useDataSources();
+  const [data, setData] = useState<Record<string, unknown>[]>([]);
 
   useEffect(() => {
-    // Simulate API call
-    setLoading(true);
-    setTimeout(() => {
-      try {
-        if (mockData[dataSourceId as keyof typeof mockData]) {
-          setData(mockData[dataSourceId as keyof typeof mockData]);
-          setError(null);
-        } else {
-          setData([]);
-          setError(`Data source ${dataSourceId} not found`);
-        }
-      } catch (err) {
-        setError('Error fetching data');
-        setData([]);
-      } finally {
-        setLoading(false);
-      }
-    }, 500);
-  }, [dataSourceId]);
+    // Try to get data from the user's data sources first
+    const userDataSource = getDataSourceById(dataSourceId);
+    
+    if (userDataSource && userDataSource.data && userDataSource.data.length > 0) {
+      // User has uploaded this data source
+      setData(userDataSource.data);
+    } else if (mockData[dataSourceId as keyof typeof mockData]) {
+      // Fall back to mock data for demo sources
+      setData(mockData[dataSourceId as keyof typeof mockData] as Record<string, unknown>[]);
+    } else {
+      // No data found
+      setData([]);
+    }
+  }, [dataSourceId, getDataSourceById]);
 
   return data;
-};
-
-// Eventually, we'll have a hook to fetch real data from an API
-export const useWidgetData = (endpoint: string) => {
-  const [data, setData] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(endpoint);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const result = await response.json();
-        setData(result);
-        setError(null);
-      } catch (err) {
-        setError(`Error fetching data: ${err instanceof Error ? err.message : String(err)}`);
-        setData([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [endpoint]);
-
-  return { data, loading, error };
 };

@@ -62,7 +62,7 @@ const TableWidget: React.FC<TableWidgetProps> = ({ widget, onRemove }) => {
   };
 
   // Format a cell value based on the column configuration
-  const formatCellValue = (value: string | number | boolean | null | undefined, format?: string): string => {
+  const formatCellValue = (value: unknown, format?: string): string => {
     if (value === undefined || value === null) return '';
     
     switch (format) {
@@ -77,7 +77,8 @@ const TableWidget: React.FC<TableWidgetProps> = ({ widget, onRemove }) => {
           minimumFractionDigits: 1 
         }).format(Number(value) / 100);
       case 'date':
-        return new Date(value.toString()).toLocaleDateString();
+        // Make sure we convert to string before parsing date
+        return new Date(String(value)).toLocaleDateString();
       default:
         return String(value);
     }

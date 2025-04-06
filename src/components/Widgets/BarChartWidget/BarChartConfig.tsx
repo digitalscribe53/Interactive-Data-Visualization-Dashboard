@@ -11,6 +11,8 @@ import {
 } from '@mui/material';
 import { BarChartWidget as BarChartWidgetType } from '../../../types/widget.types';
 import { useDashboard } from '../../../context/DashboardContext';
+import DataSourceManager from '../../DataSources/DataSourceManager';
+import { useDataSources } from '../../../hooks/useDataSources';
 
 interface BarChartConfigProps {
   widget: BarChartWidgetType;
@@ -24,29 +26,40 @@ const BarChartConfig: React.FC<BarChartConfigProps> = ({ widget, onSave }) => {
   const [xAxisKey, setXAxisKey] = useState(widget.config.xAxisKey);
   const [yAxisKey, setYAxisKey] = useState(widget.config.yAxisKey);
   const [color, setColor] = useState(widget.config.color);
+  const [dataSourceManagerOpen, setDataSourceManagerOpen] = useState(false);
 
   // Mock data sources for demo
   const dataSources = [
     { id: 'sales', name: 'Sales Data' },
     { id: 'traffic', name: 'Website Traffic' },
     { id: 'performance', name: 'Performance Metrics' },
+    { id: 'browse', name: 'Browse for data source...' }
   ];
 
-  // Mock field options based on the selected data source
-  const getFieldOptions = (dataSourceId: string) => {
-    switch (dataSourceId) {
-      case 'sales':
-        return ['month', 'quarter', 'product', 'revenue', 'units', 'profit'];
-      case 'traffic':
-        return ['date', 'page', 'visitors', 'pageviews', 'bounceRate'];
-      case 'performance':
-        return ['team', 'metric', 'value', 'target', 'variance'];
-      default:
-        return [];
+  // Get field options for the selected data source
+  const { getFieldsForDataSource } = useDataSources();
+  
+  // Get available fields for the selected data source
+  const dataSourceFields = getFieldsForDataSource(dataSource);
+  const fieldOptions = dataSourceFields.map((field: { name: string }) => field.name);
+
+  const handleDataSourceChange = (selectedDataSource: string) => {
+    if (selectedDataSource === 'browse') {
+      setDataSourceManagerOpen(true);
+    } else {
+      setDataSource(selectedDataSource);
+      // Reset axis fields when data source changes
+      setXAxisKey('');
+      setYAxisKey('');
     }
   };
 
-  const fieldOptions = getFieldOptions(dataSource);
+  const handleSelectDataSource = (sourceId: string) => {
+    setDataSource(sourceId);
+    // Reset axis fields when data source changes
+    setXAxisKey('');
+    setYAxisKey('');
+  };
 
   const handleSave = () => {
     const updatedWidget: BarChartWidgetType = {
@@ -81,7 +94,7 @@ const BarChartConfig: React.FC<BarChartConfigProps> = ({ widget, onSave }) => {
           <InputLabel>Data Source</InputLabel>
           <Select
             value={dataSource}
-            onChange={(e) => setDataSource(e.target.value)}
+            onChange={(e) => handleDataSourceChange(e.target.value)}
           >
             {dataSources.map((ds) => (
               <MenuItem key={ds.id} value={ds.id}>
@@ -97,7 +110,7 @@ const BarChartConfig: React.FC<BarChartConfigProps> = ({ widget, onSave }) => {
             value={xAxisKey}
             onChange={(e) => setXAxisKey(e.target.value)}
           >
-            {fieldOptions.map((field) => (
+            {fieldOptions.map((field: string) => (
               <MenuItem key={field} value={field}>
                 {field}
               </MenuItem>
@@ -111,7 +124,7 @@ const BarChartConfig: React.FC<BarChartConfigProps> = ({ widget, onSave }) => {
             value={yAxisKey}
             onChange={(e) => setYAxisKey(e.target.value)}
           >
-            {fieldOptions.map((field) => (
+            {fieldOptions.map((field: string) => (
               <MenuItem key={field} value={field}>
                 {field}
               </MenuItem>
@@ -137,6 +150,12 @@ const BarChartConfig: React.FC<BarChartConfigProps> = ({ widget, onSave }) => {
           </Button>
         </div>
       </FormGroup>
+
+      <DataSourceManager
+        open={dataSourceManagerOpen}
+        onClose={() => setDataSourceManagerOpen(false)}
+        onSelectDataSource={handleSelectDataSource}
+      />
     </div>
   );
 };
