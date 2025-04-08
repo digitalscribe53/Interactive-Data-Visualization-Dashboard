@@ -1,0 +1,56 @@
+/* src/styles/ColorPalette.css */
+
+:root {
+    /* Primary colors */
+    --primary-main: #4285F4;
+    --primary-dark: #3367D6;
+    --primary-light: #5C9CFF;
+  
+    /* Secondary colors */
+    --secondary-main: #34A853;
+    --secondary-dark: #2D9249;
+    --secondary-light: #46BD65;
+  
+    /* Accent colors */
+    --accent-1: #EA4335; /* Red */
+    --accent-2: #FBBC05; /* Yellow */
+    --accent-3: #6200EE; /* Purple */
+    --accent-4: #03DAC5; /* Teal */
+  
+    /* Chart colors */
+    --chart-color-1: #4285F4;
+    --chart-color-2: #EA4335;
+    --chart-color-3: #34A853;
+    --chart-color-4: #FBBC05;
+    --chart-color-5: #6200EE;
+    --chart-color-6: #03DAC5;
+    --chart-color-7: #FF6D00;
+    --chart-color-8: #2979FF;
+  
+    /* Background colors */
+    --bg-main: #F8F9FA;
+    --bg-card: #FFFFFF;
+    --bg-hover: #F1F3F4;
+    --bg-selected: #E8F0FE;
+  
+    /* Text colors */
+    --text-primary: #202124;
+    --text-secondary: #5F6368;
+    --text-disabled: #9AA0A6;
+    --text-hint: #80868B;
+  
+    /* Status colors */
+    --success: #34A853;
+    --warning: #FBBC05;
+    --error: #EA4335;
+    --info: #4285F4;
+  
+    /* Border colors */
+    --border-light: #DADCE0;
+    --border-main: #DFE1E5;
+  
+    /* Shadow */
+    --shadow-low: 0 1px 2px rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+    --shadow-medium: 0 2px 6px rgba(60, 64, 67, 0.3), 0 1px 2px rgba(60, 64, 67, 0.2);
+    --shadow-high: 0 4px 8px rgba(60, 64, 67, 0.3), 0 1px 3px rgba(60, 64, 67, 0.25);
+  }
