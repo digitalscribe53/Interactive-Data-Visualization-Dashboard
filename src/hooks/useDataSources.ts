@@ -44,38 +44,45 @@ export interface DataSource {
   data: Record<string, unknown>[];
 }
 
+// Initial demo data sources
+const initialDemoSources: DataSource[] = [
+  { id: 'sales', name: 'Sales Data (Demo)', type: 'demo', dateAdded: new Date(), data: [] },
+  { id: 'traffic', name: 'Website Traffic (Demo)', type: 'demo', dateAdded: new Date(), data: [] },
+  { id: 'performance', name: 'Performance Metrics (Demo)', type: 'demo', dateAdded: new Date(), data: [] },
+];
+
 export const useDataSources = () => {
-  const [dataSources, setDataSources] = useState<DataSource[]>([
-    { id: 'sales', name: 'Sales Data (Demo)', type: 'demo', dateAdded: new Date(), data: [] },
-    { id: 'traffic', name: 'Website Traffic (Demo)', type: 'demo', dateAdded: new Date(), data: [] },
-    { id: 'performance', name: 'Performance Metrics (Demo)', type: 'demo', dateAdded: new Date(), data: [] },
-  ]);
+  const [dataSources, setDataSources] = useState<DataSource[]>(initialDemoSources);
 
   // Load user data sources from localStorage on mount
   useEffect(() => {
-    const loadDataSources = () => {
-      try {
-        const savedSources = localStorage.getItem('dataSources');
-        if (savedSources) {
-          const parsedSources = JSON.parse(savedSources);
-          // Convert string dates back to Date objects
-          const processedSources = parsedSources.map((source: Record<string, unknown>) => ({
-            ...source,
-            dateAdded: new Date(source.dateAdded as string)
-          }));
-          
-          // Combine demo sources with user sources
-          const demoSources = dataSources.filter(ds => ds.type === 'demo');
-          const userSources = processedSources.filter((ds: DataSource) => ds.type !== 'demo');
-          setDataSources([...demoSources, ...userSources]);
-        }
-      } catch (error) {
-        console.error('Error loading data sources:', error);
+    try {
+      const savedSources = localStorage.getItem('dataSources');
+      if (savedSources) {
+        const parsedSources = JSON.parse(savedSources);
+        // Convert string dates back to Date objects
+        const processedSources = parsedSources.map((source: Record<string, unknown>) => ({
+          ...source,
+          dateAdded: new Date(source.dateAdded as string)
+        }));
+        
+        // Combine demo sources with user sources
+        const userSources = processedSources.filter((ds: DataSource) => ds.type !== 'demo');
+        setDataSources([...initialDemoSources, ...userSources]);
       }
-    };
+    } catch (error) {
+      console.error('Error loading data sources:', error);
+    }
+  }, []);
 
-    loadDataSources();
-  }, [dataSources]); // Include dataSources in the dependency array
+  // Save data sources to localStorage whenever they change
+  useEffect(() => {
+    // Only save user sources (skip demo sources)
+    const userSources = dataSources.filter(ds => ds.type !== 'demo');
+    if (userSources.length > 0) {
+      localStorage.setItem('dataSources', JSON.stringify(userSources));
+    }
+  }, [dataSources]);
 
   // Get a specific data source by ID
   const getDataSourceById = useCallback((sourceId: string): DataSource | undefined => {
@@ -134,15 +141,7 @@ export const useDataSources = () => {
 
   // Add a new data source
   const addDataSource = useCallback((newSource: DataSource) => {
-    setDataSources(prev => {
-      const updatedSources = [...prev, newSource];
-      
-      // Save to localStorage (excluding demo sources)
-      const sourcesToSave = updatedSources.filter(ds => ds.type !== 'demo');
-      localStorage.setItem('dataSources', JSON.stringify(sourcesToSave));
-      
-      return updatedSources;
-    });
+    setDataSources(prev => [...prev, newSource]);
   }, []);
 
   // Remove a data source
@@ -152,16 +151,7 @@ export const useDataSources = () => {
       return false;
     }
     
-    setDataSources(prev => {
-      const updatedSources = prev.filter(ds => ds.id !== sourceId);
-      
-      // Save to localStorage (excluding demo sources)
-      const sourcesToSave = updatedSources.filter(ds => ds.type !== 'demo');
-      localStorage.setItem('dataSources', JSON.stringify(sourcesToSave));
-      
-      return updatedSources;
-    });
-    
+    setDataSources(prev => prev.filter(ds => ds.id !== sourceId));
     return true;
   }, []);
 

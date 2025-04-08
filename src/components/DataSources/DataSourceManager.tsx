@@ -22,6 +22,7 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
 import { useDataSources } from '../../hooks/useDataSources';
+import './DataSourceManager.css'; 
 
 interface DataSourceManagerProps {
   open: boolean;
@@ -90,6 +91,10 @@ const DataSourceManager: React.FC<DataSourceManagerProps> = ({
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
+
+      // Automatically select the newly added data source
+      onSelectDataSource(newSourceId);
+      onClose();
     } catch (error) {
       console.error('Error parsing file:', error);
       alert('Error parsing file. Please check the file format and try again.');
@@ -230,11 +235,12 @@ const DataSourceManager: React.FC<DataSourceManagerProps> = ({
           <Typography variant="subtitle1" gutterBottom>
             Available Data Sources
           </Typography>
-          <List>
+          <List className="data-source-list">
             {dataSources.map((source) => (
               <ListItem 
                 key={source.id}
                 onClick={() => handleSelectSource(source.id)}
+                className="data-source-item"
               >
                 <ListItemText
                   primary={source.name}

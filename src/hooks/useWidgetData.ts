@@ -37,17 +37,24 @@ export const useMockData = (dataSourceId: string): Record<string, unknown>[] => 
   const [data, setData] = useState<Record<string, unknown>[]>([]);
 
   useEffect(() => {
-    // Try to get data from the user's data sources first
-    const userDataSource = getDataSourceById(dataSourceId);
-    
-    if (userDataSource && userDataSource.data && userDataSource.data.length > 0) {
-      // User has uploaded this data source
-      setData(userDataSource.data);
-    } else if (mockData[dataSourceId as keyof typeof mockData]) {
-      // Fall back to mock data for demo sources
+    if (!dataSourceId) {
+      setData([]);
+      return;
+    }
+
+    // Check if this is a user-uploaded data source
+    if (dataSourceId.startsWith('user-source-')) {
+      const userSource = getDataSourceById(dataSourceId);
+      if (userSource && userSource.data) {
+        setData(userSource.data);
+      } else {
+        setData([]);
+      }
+    } 
+    // Otherwise use the demo data
+    else if (mockData[dataSourceId as keyof typeof mockData]) {
       setData(mockData[dataSourceId as keyof typeof mockData] as Record<string, unknown>[]);
     } else {
-      // No data found
       setData([]);
     }
   }, [dataSourceId, getDataSourceById]);
