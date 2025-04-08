@@ -1,3 +1,4 @@
+// src/components/Dashboard/Dashboard.tsx
 import React, { useState } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
@@ -8,8 +9,12 @@ import LineChartWidget from '../Widgets/LineChartWidget/LineChartWidget';
 import KpiWidget from '../Widgets/KpiWidget/KpiWidget';
 import TableWidget from '../Widgets/TableWidget/TableWidget';
 import { Widget, WidgetPosition } from '../../types/widget.types';
+import EditIcon from '@mui/icons-material/Edit';
+import DoneIcon from '@mui/icons-material/Done';
+import DashboardHint from './DashboardHint';
+import emptyStateImage from '../../assets/empty-dashboard.svg';
 import './Dashboard.css';
-import './Dashboard.enhanced.css';
+import './Dashboard.pro.css';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -30,7 +35,7 @@ interface LayoutItem {
 }
 
 const Dashboard: React.FC = () => {
-  const { widgets, updateWidgetPosition, removeWidget } = useDashboard();
+  const { widgets, updateWidgetPosition, removeWidget, currentDashboard } = useDashboard();
   const [editMode, setEditMode] = useState(false);
 
   const handleLayoutChange = (layout: LayoutItem[]) => {
@@ -47,16 +52,65 @@ const Dashboard: React.FC = () => {
     });
   };
 
+  // Function to assign a consistent color accent based on widget id
+  const getWidgetAccentClass = (widgetId: string) => {
+    // Simple hash function to get a number from string
+    const hash = widgetId.split('').reduce((acc, char) => {
+      return acc + char.charCodeAt(0);
+    }, 0);
+    
+    // Get a number between 1-8 for our accent classes
+    const accentNumber = (hash % 8) + 1;
+    return `accent-${accentNumber}`;
+  };
+
   const renderWidget = (widget: Widget) => {
+    // Add accent class based on widget ID
+    const accentClass = getWidgetAccentClass(widget.id);
+    
     switch (widget.type) {
       case 'bar-chart':
-        return <BarChartWidget key={widget.id} widget={widget} onRemove={removeWidget} />;
+        return (
+          <div className="widget-wrapper">
+            <BarChartWidget 
+              key={widget.id} 
+              widget={widget} 
+              onRemove={removeWidget} 
+              accentClass={accentClass}
+            />
+          </div>
+        );
       case 'line-chart':
-        return <LineChartWidget key={widget.id} widget={widget} onRemove={removeWidget} />;
+        return (
+          <div className="widget-wrapper">
+            <LineChartWidget 
+              key={widget.id} 
+              widget={widget} 
+              onRemove={removeWidget} 
+            />
+          </div>
+        );
       case 'kpi':
-        return <KpiWidget key={widget.id} widget={widget} onRemove={removeWidget} />;
+        return (
+          <div className="widget-wrapper">
+            <KpiWidget 
+              key={widget.id} 
+              widget={widget} 
+              onRemove={removeWidget} 
+              accentClass={accentClass}
+            />
+          </div>
+        );
       case 'table':
-        return <TableWidget key={widget.id} widget={widget} onRemove={removeWidget} />;
+        return (
+          <div className="widget-wrapper">
+            <TableWidget 
+              key={widget.id} 
+              widget={widget} 
+              onRemove={removeWidget} 
+            />
+          </div>
+        );
       default:
         return <div>Unknown widget type</div>;
     }
@@ -77,16 +131,29 @@ const Dashboard: React.FC = () => {
   return (
     <div className="dashboard">
       <div className="dashboard-header">
-        <h2>My Dashboard</h2>
+        <h2>{currentDashboard?.name || 'My Dashboard'}</h2>
         <button onClick={() => setEditMode(!editMode)}>
-          {editMode ? 'Done Editing' : 'Edit Dashboard'}
+          {editMode ? <DoneIcon style={{ marginRight: '8px' }} /> : <EditIcon style={{ marginRight: '8px' }} />}
+          {editMode ? 'Done' : 'Edit Dashboard'}
         </button>
       </div>
 
       {widgets.length === 0 ? (
         <div className="empty-dashboard">
-          <h3>No widgets added yet</h3>
-          <p>Click "Edit Dashboard" and add widgets from the sidebar</p>
+          <img 
+            src={emptyStateImage} 
+            alt="Empty dashboard" 
+            style={{ width: '180px', height: '180px' }}
+            onError={(e) => {
+              // Fallback if image is missing
+              e.currentTarget.style.display = 'none';
+            }}
+          />
+          <h3>Your dashboard is empty</h3>
+          <p>
+            Click "Edit Dashboard" and add widgets from the sidebar to start
+            building your custom data visualization dashboard.
+          </p>
         </div>
       ) : (
         <ResponsiveGridLayout
@@ -98,6 +165,7 @@ const Dashboard: React.FC = () => {
           isDraggable={editMode}
           isResizable={editMode}
           onLayoutChange={handleLayoutChange}
+          margin={[16, 16]}
         >
           {widgets.map((widget) => (
             <div key={widget.id} className="widget-container">
@@ -106,6 +174,9 @@ const Dashboard: React.FC = () => {
           ))}
         </ResponsiveGridLayout>
       )}
+      
+      {/* Show helpful hints to users */}
+      <DashboardHint delay={3000} />
     </div>
   );
 };

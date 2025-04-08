@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200px" height="200px" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(10.000000, 10.000000)">
+            <!-- Background shape -->
+            <rect fill="#F8F9FA" x="0" y="0" width="180" height="180" rx="12"></rect>
+            
+            <!-- Chart elements -->
+            <rect fill="#4285F4" opacity="0.6" x="20" y="80" width="20" height="50" rx="4"></rect>
+            <rect fill="#34A853" opacity="0.6" x="50" y="50" width="20" height="80" rx="4"></rect>
+            <rect fill="#EA4335" opacity="0.6" x="80" y="70" width="20" height="60" rx="4"></rect>
+            <rect fill="#FBBC05" opacity="0.6" x="110" y="40" width="20" height="90" rx="4"></rect>
+            <rect fill="#6200EE" opacity="0.6" x="140" y="60" width="20" height="70" rx="4"></rect>
+            
+            <!-- X axis -->
+            <line x1="20" y1="130" x2="160" y2="130" stroke="#DADCE0" stroke-width="2"></line>
+            
+            <!-- Dotted grid lines -->
+            <line x1="20" y1="40" x2="160" y2="40" stroke="#DADCE0" stroke-width="1" stroke-dasharray="4,4"></line>
+            <line x1="20" y1="70" x2="160" y2="70" stroke="#DADCE0" stroke-width="1" stroke-dasharray="4,4"></line>
+            <line x1="20" y1="100" x2="160" y2="100" stroke="#DADCE0" stroke-width="1" stroke-dasharray="4,4"></line>
+            
+            <!-- Plus icon -->
+            <circle fill="#FFFFFF" stroke="#4285F4" stroke-width="2" cx="90" cy="90" r="25"></circle>
+            <line x1="78" y1="90" x2="102" y2="90" stroke="#4285F4" stroke-width="3" stroke-linecap="round"></line>
+            <line x1="90" y1="78" x2="90" y2="102" stroke="#4285F4" stroke-width="3" stroke-linecap="round"></line>
+        </g>
+    </g>
+</svg>
